@@ -1,4 +1,3 @@
-
 import data_structures.Pair;
 import java.util.*;
 
@@ -154,6 +153,7 @@ public class ShortestRoute {
 	    }
 	    //all the methods above are for the dikjstra method
 	    
+	
 	    
 	    
 		private static Graph newGraph(int n) {
@@ -195,11 +195,49 @@ public class ShortestRoute {
 			}
 			
 			ArrayList<Integer> destinations = new ArrayList<Integer>();//This is just for example
+			destinations.add(0);
 			destinations.add(1);
 			destinations.add(2);
 			destinations.add(3);
-			destinations.add(4);
+		    //Generate All paths method store in TotalPaths
+			// Todo Permutions
 			
+		    
+		    //MinWeight = Infinity
+			
+		    ArrayList<String> totalPaths = new ArrayList<String>();
+		    totalPaths.add("0123");
+		    totalPaths.add("0213");
+		    
+		    for(int i = 0; i < totalPaths.size(); i++) { //Loop through Paths
+		    	int count = 0;
+		    	int count2 = 1;
+		    	//while loop to loop through shortest distance
+		    	String path = totalPaths.get(i);
+		    	System.out.println("PASS");
+		    	
+		    	
+		    	while(path.length() -  1 > count) {  // looking at 1234, count has to be less than something
+		    	 //find path from 1 to 2, then 2 to 3, then 3 to 4
+		    		
+		    		String dest1 = path.substring(count, count + 1);
+		    		String dest2 = path.substring(count + 1, count + 2);
+		    		//Start of comparision
+		    		for(int j = 0; j < shortestsDist.size(); j++) {
+		    			//find path from 1 to 2 and get weight
+		    			String firstDest  = shortestsDist.get(j).second.get(0);
+		    			int listsize = shortestsDist.get(j).second.size() -1;
+		    			String lastDest  = shortestsDist.get(j).second.get(listsize);
+		    			//compare to strings above with 1 and 2 respectivl
+		    			if(dest1.equals(firstDest) && dest2.equals(lastDest)) {
+		    				//SAVE THIS Path
+		    				int printWeight = shortestsDist.get(j).first;
+		    				System.out.println("found path with weight = " + printWeight);
+		    			}
+		    		} //End of Comparision
+		    		count += 1;
+		    	}
+		    }
 			
 
 	   }
