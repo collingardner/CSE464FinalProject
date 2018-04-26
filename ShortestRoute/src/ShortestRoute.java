@@ -208,14 +208,18 @@ public class ShortestRoute {
 		    ArrayList<String> totalPaths = new ArrayList<String>();
 		    totalPaths.add("0123");
 		    totalPaths.add("0213");
-		    
+	    	double outputMinWeight = Integer.MAX_VALUE; //this is the weight you will output.
+	    	double minWeight = 0;
+	    	ArrayList<String> outputShortestRoute = new ArrayList<String>();
+	    	ArrayList<String> shortestRoute = new ArrayList<String>();
+	    	
 		    for(int i = 0; i < totalPaths.size(); i++) { //Loop through Paths
 		    	int count = 0;
 		    	int count2 = 1;
 		    	//while loop to loop through shortest distance
 		    	String path = totalPaths.get(i);
 		    	System.out.println("PASS");
-		    	
+
 		    	
 		    	while(path.length() -  1 > count) {  // looking at 1234, count has to be less than something
 		    	 //find path from 1 to 2, then 2 to 3, then 3 to 4
@@ -230,15 +234,32 @@ public class ShortestRoute {
 		    			String lastDest  = shortestsDist.get(j).second.get(listsize);
 		    			//compare to strings above with 1 and 2 respectivl
 		    			if(dest1.equals(firstDest) && dest2.equals(lastDest)) {
-		    				//SAVE THIS Path
+		    				//SAVE THIS Path to shortestRoute
+		    				for(int k = 0; k < shortestsDist.get(j).second.size(); k++){
+		    					shortestRoute.add(shortestsDist.get(j).second.get(k));
+		    				}
 		    				int printWeight = shortestsDist.get(j).first;
+		    				minWeight += printWeight;
 		    				System.out.println("found path with weight = " + printWeight);
 		    			}
 		    		} //End of Comparision
 		    		count += 1;
 		    	}
-		    }
-			
-
-	   }
-}
+		    	//Now look for the minimumWeight by comparasion and save it
+		    	//also save path that goes along with that minimum weight
+		    	System.out.println("Path is " + shortestRoute);
+		    	if(minWeight < outputMinWeight) {
+		    		System.out.println("minWeight = " + minWeight);
+		    		System.out.println(shortestRoute);
+		    		outputMinWeight = minWeight;//update prevMinWeight
+		    		minWeight = 0;
+		    		
+		    		outputShortestRoute = new ArrayList<String>(shortestRoute); //set to zero
+		    		shortestRoute.clear();
+		    	}  // end of if logic
+		    } //End of Looping throught paths 
+		    
+		    System.out.println("Minweight is " + outputMinWeight);
+		    System.out.println("Path is " + outputShortestRoute);
+	   }//End of main method
+} //end of class
