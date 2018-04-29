@@ -123,7 +123,7 @@ public class ShortestRoute {
 	    
 	    private static boolean askForPriority() {
 	    	boolean ret = false;
-	    	System.out.println("Input 'Y' or 'N' whether order of desired route is important");
+	    	System.out.print("Input 'Y' or 'N' to indicate whether visiting order of route entered is important: ");
 	    	Scanner sc = new Scanner(System.in);
 	    	String input = sc.nextLine();
 	    	if(input.equals("Y")){
@@ -163,6 +163,8 @@ public class ShortestRoute {
 	    
 	    
 	   public static void main(String[] args) {
+
+		   
 		   Graph G = newGraph(11);// 10 points but has to be one higher
 		   //Make the graph from 4.3 in Final Algorithm paper points E unlabled in that paper
 			G.setWeight(0, 4, 20.0);
@@ -184,18 +186,21 @@ public class ShortestRoute {
 			G.setWeight(1, 9, 2.0);
 			//End of setting up the graph.
 			
-			for(int i = 0; i < G.num_nodes-1; i++){
-				dijkstra(G, i); //Get shortest path from each node in G to all the other shortest nodes
-			}//List of all the possible combinations of paths to take
+		
 			String route = getRoute(); //Gets the route destination
 			boolean priorityMatters = askForPriority();
 			
+		    long startTime = System.nanoTime();
+			for(int i = 0; i < G.num_nodes-1; i++){
+				dijkstra(G, i); //Get shortest path from each node in G to all the other shortest nodes
+			}//List of all the possible combinations of paths to take
+			
 			if(priorityMatters){
-				System.out.println("Order of routes visted matters. Below is the ouput");
+				System.out.println("Order of route is important. Below is the ouput");
 				totalPaths.add(route);
 			} else {
 				generateCombinations(route, 0, route.length()-1, route.substring(0, 1), route.substring(route.length() - 1));
-				System.out.println("Order of routes visted does not matter. Below is the output");
+				System.out.println("Order of route is not important. Below is the output");
 			}
 			
 
@@ -243,13 +248,17 @@ public class ShortestRoute {
 		    		//System.out.println("minWeight = " + minWeight);
 		    		//System.out.println(shortestRoute); //removed for testing
 		    		outputMinWeight = minWeight;//update prevMinWeight
-		    		minWeight = 0;
-		    		
 		    		outputShortestRoute = new ArrayList<String>(shortestRoute); //set to zero
-		    		shortestRoute.clear();
 		    	}  // end of if logic
+		    	minWeight = 0;
+		    	shortestRoute.clear();
 		    } //End of Looping throught paths   
 		    //System.out.println("Min weight is " + outputMinWeight);
 		    System.out.println("The shortest route is " + outputShortestRoute + " with a distance of " + outputMinWeight);
+	  
+		    //Runtime calculation
+		    long endTime = System.nanoTime();
+		    long totalTime = endTime - startTime;
+		    System.out.println("Run time : " + totalTime + " nanoseconds");
 	   }//End of main method
 } //end of class
