@@ -7,24 +7,14 @@ public class ShortestRoute {
 	 private static ArrayList<Pair<Integer, ArrayList<String>>> shortestsDist = new ArrayList<Pair<Integer, ArrayList<String>>>();
 	 private static String getPath= "";
 	 private static ArrayList<String> totalPaths = new ArrayList<String>();
-	 // Function that implements Dijkstra's
-	    // single source shortest path
-	    // algorithm for a graph represented 
-	    // using adjacency matrix
-	    // representation
-	    private static void dijkstra(Graph G,
-	                                        int startVertex)
+	 // Function that implements Dijkstra's single source shortest path algorithm for a graph from Graph Class
+	    private static void dijkstra(Graph G, int startVertex)
 	    {
 	        int nVertices = G.num_nodes;
-	 
 	        // shortestDistances[i] will hold the
 	        // shortest distance from src to i
 	        int[] shortestDistances = new int[nVertices];
 	 
-	        // added[i] will true if vertex i is
-	        // included / in shortest path tree
-	        // or shortest distance from src to 
-	        // i is finalized
 	        boolean[] added = new boolean[nVertices];
 	 
 	        // Initialize all distances as 
@@ -35,24 +25,17 @@ public class ShortestRoute {
 	            shortestDistances[vertexIndex] = Integer.MAX_VALUE;
 	            added[vertexIndex] = false;
 	        }
-	         
 	        // Distance of source vertex from
 	        // itself is always 0
 	        shortestDistances[startVertex] = 0;
-	 
 	        // Parent array to store shortest
 	        // path tree
 	        int[] parents = new int[nVertices];
-	 
-	        // The starting vertex does not 
-	        // have a parent
 	        parents[startVertex] = NO_PARENT;
-	 
 	        // Find shortest path for all 
 	        // vertices
 	        for (int i = 1; i < nVertices; i++)
-	        {
-	 
+	        { 
 	            // Pick the minimum distance vertex
 	            // from the set of vertices not yet
 	            // processed. nearestVertex is 
@@ -72,14 +55,7 @@ public class ShortestRoute {
 	                    shortestDistance = shortestDistances[vertexIndex];
 	                }
 	            }
-	 
-	            // Mark the picked vertex as
-	            // processed
 	            added[nearestVertex] = true;
-	 
-	            // Update dist value of the
-	            // adjacent vertices of the
-	            // picked vertex.
 	            for (int vertexIndex = 0;
 	                     vertexIndex < nVertices; 
 	                     vertexIndex++) 
@@ -90,31 +66,21 @@ public class ShortestRoute {
 	                	edgeDistance = edgeDistanceDouble.intValue();
 	                }
 	                
-	                
-	                if (edgeDistance > 0
-	                    && ((shortestDistance + edgeDistance) < 
-	                        shortestDistances[vertexIndex])) 
+	                if (edgeDistance > 0 && ((shortestDistance + edgeDistance) < shortestDistances[vertexIndex])) 
 	                {
 	                    parents[vertexIndex] = nearestVertex;
-	                    shortestDistances[vertexIndex] = shortestDistance + 
-	                                                       edgeDistance;
+	                    shortestDistances[vertexIndex] = shortestDistance + edgeDistance;
 	                }
 	            }
 	        }
-	 
 	        printSolution(startVertex, shortestDistances, parents);
 	    }
 	 
-	    // A utility function to print 
-	    // the constructed distances
-	    // array and shortest paths
 	    private static void printSolution(int startVertex,
 	                                      int[] distances,
 	                                      int[] parents)
 	    {
 	        int nVertices = distances.length;
-	      //  System.out.print("Vertex\t Distance\tPath");
-	         
 	        for (int vertexIndex = 0; 
 	                 vertexIndex < nVertices; 
 	                 vertexIndex++) 
@@ -122,11 +88,7 @@ public class ShortestRoute {
 	        	getPath = "";
 	            if (vertexIndex != startVertex) 
 	            {
-	               //System.out.print("\n" + startVertex + " -> ");
-	                //System.out.print(vertexIndex + " \t\t ");
-	               //System.out.print(distances[vertexIndex] + "\t\t");
 	                printPath(vertexIndex, parents);
-	              //  System.out.println(getPath);
 	                ArrayList<String> addList = new ArrayList<String>();
 	                Collections.addAll(addList, getPath.split(","));
 	                Pair pair = new Pair(distances[vertexIndex], addList);
@@ -135,26 +97,20 @@ public class ShortestRoute {
 	        }
 	    }
 	 
-	    // Function to print shortest path
+	    // Function to add shortest path
 	    // from source to currentVertex
 	    // using parents array
-	    private static void printPath(int currentVertex,
-	                                  int[] parents)
+	    private static void printPath(int currentVertex, int[] parents)
 	    {
-	         
-	        // Base case : Source node has
-	        // been processed
 	        if (currentVertex == NO_PARENT)
 	        {
 	            return;
 	        }
 	        printPath(parents[currentVertex], parents);
-	      //  System.out.print(currentVertex + " ");
 	        getPath += currentVertex + ",";
 	    }
 	    //all the methods above are for the dikjstra method
-	    
-	
+
 	    private static String getRoute() {
 	    	String ret = "";
 	    	System.out.print("Enter route desired seperate by commas: ");
@@ -178,7 +134,6 @@ public class ShortestRoute {
 	    	if (l == r) {
 	    		if(str.substring(0, 1).equals(first) && str.substring(str.length() - 1).equals(last)){
 		    		totalPaths.add(str);
-		    		System.out.println(str);
 	    		}
 	    	} else {
 	    	for (int i = l; i <= r; i++) {
@@ -197,7 +152,6 @@ public class ShortestRoute {
 	   public static void main(String[] args) {
 		   Graph G = newGraph(11);// 10 points but has to be one higher
 		   //Make the graph from 4.3 in Final Algorithm paper points E unlabled in that paper
-			//Also since it is Int, 1 = A, 2 = B, and so forth
 			G.setWeight(0, 4, 20.0);
 			G.setWeight(0, 5, 11.0);
 			G.setWeight(0, 6, 13.0);// End of A 
@@ -220,22 +174,6 @@ public class ShortestRoute {
 			for(int i = 0; i < G.num_nodes-1; i++){
 				dijkstra(G, i);
 			}//List of all the possible combinations of paths to take
-		
-
-
-			//For Checking Purposes
-			for(int i = 0; i < shortestsDist.size(); i++) {
-				//System.out.println(shortestsDist.get(i).first + " Path = " + shortestsDist.get(i).second);
-			}
-			
-			
-			/*ArrayList<Integer> destinations = new ArrayList<Integer>();//This is just for example
-			destinations.add(0);
-			destinations.add(1);
-			destinations.add(2);
-			destinations.add(3); */
-		    //Generate All paths method store in TotalPaths
-			
 			String route = getRoute(); //Gets the route destination
 		
 		 generateCombinations(route, 0, route.length()-1, route.substring(0, 1), route.substring(route.length() - 1));
@@ -273,26 +211,24 @@ public class ShortestRoute {
 		    				}
 		    				int printWeight = shortestsDist.get(j).first;
 		    				minWeight += printWeight;
-		    				System.out.println("found path with weight = " + printWeight);
+		    				//System.out.println("found path with weight = " + printWeight);
 		    			}
 		    		} //End of Comparision
 		    		count += 1;
 		    	}
 		    	//Now look for the minimumWeight by comparasion and save it
 		    	//also save path that goes along with that minimum weight
-		    	System.out.println("Path is " + shortestRoute);
 		    	if(minWeight < outputMinWeight) {
-		    		System.out.println("minWeight = " + minWeight);
-		    		System.out.println(shortestRoute);
+		    		//System.out.println("minWeight = " + minWeight);
+		    		//System.out.println(shortestRoute); //removed for testing
 		    		outputMinWeight = minWeight;//update prevMinWeight
 		    		minWeight = 0;
 		    		
 		    		outputShortestRoute = new ArrayList<String>(shortestRoute); //set to zero
 		    		shortestRoute.clear();
 		    	}  // end of if logic
-		    } //End of Looping throught paths 
-		    
-		    System.out.println("Minweight is " + outputMinWeight);
+		    } //End of Looping throught paths   
+		    System.out.println("Min weight is " + outputMinWeight);
 		    System.out.println("The shortest route is " + outputShortestRoute);
 	   }//End of main method
 } //end of class
