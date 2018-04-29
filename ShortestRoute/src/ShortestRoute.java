@@ -121,6 +121,19 @@ public class ShortestRoute {
 	    	
 	    }
 	    
+	    private static boolean askForPriority() {
+	    	boolean ret = false;
+	    	System.out.println("Input 'Y' or 'N' whether order of desired route is important");
+	    	Scanner sc = new Scanner(System.in);
+	    	String input = sc.nextLine();
+	    	if(input.equals("Y")){
+	    		ret = true;
+	    	} else {
+	    		ret = false;
+	    	}
+	    	return ret;
+	    }
+	    
 	    private static String swap(String a, int i, int j) {
 	    	char temp;
 	    	char[] charArray = a.toCharArray();
@@ -172,11 +185,19 @@ public class ShortestRoute {
 			//End of setting up the graph.
 			
 			for(int i = 0; i < G.num_nodes-1; i++){
-				dijkstra(G, i);
+				dijkstra(G, i); //Get shortest path from each node in G to all the other shortest nodes
 			}//List of all the possible combinations of paths to take
 			String route = getRoute(); //Gets the route destination
-		
-		 generateCombinations(route, 0, route.length()-1, route.substring(0, 1), route.substring(route.length() - 1));
+			boolean priorityMatters = askForPriority();
+			
+			if(priorityMatters){
+				System.out.println("Order of routes visted matters. Below is the ouput");
+				totalPaths.add(route);
+			} else {
+				generateCombinations(route, 0, route.length()-1, route.substring(0, 1), route.substring(route.length() - 1));
+				System.out.println("Order of routes visted does not matter. Below is the output");
+			}
+			
 
 	    	double outputMinWeight = Integer.MAX_VALUE; //this is the weight you will output.
 	    	double minWeight = 0;
@@ -228,7 +249,7 @@ public class ShortestRoute {
 		    		shortestRoute.clear();
 		    	}  // end of if logic
 		    } //End of Looping throught paths   
-		    System.out.println("Min weight is " + outputMinWeight);
-		    System.out.println("The shortest route is " + outputShortestRoute);
+		    //System.out.println("Min weight is " + outputMinWeight);
+		    System.out.println("The shortest route is " + outputShortestRoute + " with a distance of " + outputMinWeight);
 	   }//End of main method
 } //end of class
