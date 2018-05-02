@@ -18,22 +18,19 @@ public class ShortestRoute {
 	        boolean[] added = new boolean[nVertices];
 	 
 	        // Initialize all distances as 
-	        // INFINITE and added[] as false
+	        // INFINITE and not added to checked list
 	        for (int vertexIndex = 0; vertexIndex < nVertices; 
 	                                            vertexIndex++)
 	        {
 	            shortestDistances[vertexIndex] = Integer.MAX_VALUE;
 	            added[vertexIndex] = false;
 	        }
-	        // Distance of source vertex from
-	        // itself is always 0
+	        // Distance of start to itself is always zero.
 	        shortestDistances[startVertex] = 0;
-	        // Parent array to store shortest
-	        // path tree
+	        // Parent array to store shortest paths
 	        int[] parents = new int[nVertices];
 	        parents[startVertex] = NO_PARENT;
-	        // Find shortest path for all 
-	        // vertices
+	        // Find shortest path to all vertices
 	        for (int i = 1; i < nVertices; i++)
 	        { 
 	            // Pick the minimum distance vertex
@@ -73,10 +70,12 @@ public class ShortestRoute {
 	                }
 	            }
 	        }
-	        printSolution(startVertex, shortestDistances, parents);
+	        addToGlobalArr(startVertex, shortestDistances, parents);
 	    }
-	 
-	    private static void printSolution(int startVertex,
+	    
+	    //This adds the shortest paths of the startVertex, to all the other nodes in the Graph
+	    //Helper Function of Dijkstra
+	    private static void addToGlobalArr(int startVertex,
 	                                      int[] distances,
 	                                      int[] parents)
 	    {
@@ -97,9 +96,8 @@ public class ShortestRoute {
 	        }
 	    }
 	 
-	    // Function to add shortest path
-	    // from source to currentVertex
-	    // using parents array
+	    // Function to add shortest path from source to current node
+	    // To Array of its Parents. 
 	    private static void printPath(int currentVertex, int[] parents)
 	    {
 	        if (currentVertex == NO_PARENT)
@@ -109,9 +107,9 @@ public class ShortestRoute {
 	        printPath(parents[currentVertex], parents);
 	        getPath += currentVertex + ",";
 	    }
-	    //all the methods above are for the dikjstra method
+	    //all the methods above are for the Dijkstra's Shortest Path Method
 
-	    private static String getRoute() {
+	    private static String getRoute() {  //Gets User Input for desired route
 	    	String ret = "";
 	    	System.out.print("Enter route desired seperate by commas: ");
 	    	Scanner sc = new Scanner(System.in);
@@ -121,7 +119,7 @@ public class ShortestRoute {
 	    	
 	    }
 	    
-	    private static boolean askForPriority() {
+	    private static boolean askForPriority() {  //Asks the user whether or not their is priority involved in the route
 	    	boolean ret = false;
 	    	System.out.print("Input 'Y' or 'N' to indicate whether visiting order of route entered is important: ");
 	    	Scanner sc = new Scanner(System.in);
@@ -134,7 +132,7 @@ public class ShortestRoute {
 	    	return ret;
 	    }
 	    
-	    private static String swap(String a, int i, int j) {
+	    private static String swap(String a, int i, int j) { //Helper function for generating the combinations. 
 	    	char temp;
 	    	char[] charArray = a.toCharArray();
 	    	temp = charArray[i];
@@ -165,7 +163,7 @@ public class ShortestRoute {
 	   public static void main(String[] args) {
 
 		   
-		   Graph G = newGraph(11);// 10 points but has to be one higher
+		    Graph G = newGraph(11);
 		   //Make the graph from 4.3 in Final Algorithm paper points E unlabled in that paper
 			G.setWeight(0, 4, 20.0);
 			G.setWeight(0, 5, 11.0);
@@ -195,10 +193,11 @@ public class ShortestRoute {
 				dijkstra(G, i); //Get shortest path from each node in G to all the other shortest nodes
 			}//List of all the possible combinations of paths to take
 			
+			//Asking for user input if priority of route matters.
 			if(priorityMatters){
 				System.out.println("Order of route is important. Below is the ouput");
 				totalPaths.add(route);
-			} else {
+			} else {  // Generate all combinations the route can be, to test each of them for the shortest route. 
 				generateCombinations(route, 0, route.length()-1, route.substring(0, 1), route.substring(route.length() - 1));
 				System.out.println("Order of route is not important. Below is the output");
 			}
@@ -209,20 +208,24 @@ public class ShortestRoute {
 	    	ArrayList<String> outputShortestRoute = new ArrayList<String>();
 	    	ArrayList<String> shortestRoute = new ArrayList<String>();
 	    	
+	    	//Loop through each path generated either by the user inputed route, or 
+	    	//the generateCombinations function.  This logic compares the paths total distance,
+	    	// and finds the least weight path in totalPaths
 		    for(int i = 0; i < totalPaths.size(); i++) { //Loop through Paths
 		    	int count = 0;
 		    	int count2 = 1;
 		    	String prev = "";// holder so it does count looping back to itself
 		    	//while loop to loop through shortest distance
 		    	String path = totalPaths.get(i);
-		    	while(path.length() -  1 > count) {  // looking at 1234, count has to be less than something
-		    	 //find path from 1 to 2, then 2 to 3, then 3 to 4
-		    		
+		    	while(path.length() -  1 > count) {  // while all distances path is not yet calculated
+		    	 //find path from 1 to 2, then 2 to 3, then 3 to 4 ...
 		    		String dest1 = path.substring(count, count + 1);
 		    		String dest2 = path.substring(count + 1, count + 2);
-		    		//Start of comparision
+		    		//Start of looking at each connection from one node to the next in path variable. 
 		    		for(int j = 0; j < shortestsDist.size(); j++) {
-		    			//find path from 1 to 2 and get weight
+		    			// Finds the shortests Paths from each Node in the path to the next node in the path variable
+		    			//Gets the weight of that paths, and adds it to the minWeight shortestRoute variables 
+		    			//for comparision.
 		    			String firstDest  = shortestsDist.get(j).second.get(0);
 		    			int listsize = shortestsDist.get(j).second.size() -1;
 		    			String lastDest  = shortestsDist.get(j).second.get(listsize);
